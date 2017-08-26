@@ -6,6 +6,9 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Auth\Events\Registered;
+use App\Events\FeedbackReceived;
+use App\User;
 
 class EventEmailsTest extends TestCase
 {
@@ -18,14 +21,14 @@ class EventEmailsTest extends TestCase
      */
     public function testRegistration()
     {
-        $response = $this->post('/register', [
+        $this->expectsEvents(Registered::class);
+        
+        $this->post('/register', [
             'name' => 'test',
             'email' => 'test@test.ss',
             'password' => '123123',
             'password_confirmation' => '123123',
         ]);
-
-        $response->assertStatus(302);
     }
     
     /**
@@ -35,10 +38,13 @@ class EventEmailsTest extends TestCase
      */
     public function testFeedback()
     {
-        $response = $this->post('/feedback', [
-            'feedback' => 'test',
-        ]);
+        
+        $this->expectsEvents(FeedbackReceived::class);
+        
+        $user = factory(User::class)->create();
 
-        $response->assertStatus(200);
+        $this->actingAs($user)->post('/feedback', [
+            'feedback' => 'test feedback',
+        ]);
     }
 }

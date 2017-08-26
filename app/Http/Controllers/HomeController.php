@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Events\FeedbackReceived;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -39,5 +40,8 @@ class HomeController extends Controller
         ]);
         
         event(new FeedbackReceived(Auth::user(), $request->get('feedback')));
+        
+        return redirect('home')
+                ->with('success', trans('feedback.sent.success'));
     }
 }

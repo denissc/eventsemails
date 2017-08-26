@@ -1,12 +1,9 @@
 @component('mail::message')
-# Introduction
+Hello, Administration
 
-The body of your feedback message.
+{{$feedback}}
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
-
-Thanks,<br>
+Thanks,<br> {{$user->name}}
+<br>
 {{ config('app.name') }}
 @endcomponent

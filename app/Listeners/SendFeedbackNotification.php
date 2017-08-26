@@ -6,6 +6,7 @@ use App\Events\FeedbackReceived;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Mail\Feedback;
+use Mail;
 
 class SendFeedbackNotification
 {
@@ -27,6 +28,6 @@ class SendFeedbackNotification
      */
     public function handle(FeedbackReceived $event)
     {
-        Mail::to($event->user)->send(new Feedback($event->user));
+        Mail::to(config('mail.from.address'))->send(new Feedback($event->user, $event->feedback));
     }
 }
